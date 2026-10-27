@@ -63,7 +63,7 @@ If port `7810` is busy, an OS-assigned port is used; the actual URL is stored as
 3. Send `/start` to the bot — the chat is bound automatically.
 4. Use **Send test** to verify delivery.
 
-The token is written to the DSH credential store (`TELEGRAM_RELAY_BOT_TOKEN`), not to `cordis.patch.yml`. Chat id, owner, whitelist, language and the update cursor live in `$DSH_HOME/storages/telegram-relay/config.json`.
+The token is written to the DSH credential store (`TELEGRAM_RELAY_BOT_TOKEN`) when that service is available, and a local copy is always kept in `$DSH_HOME/storages/telegram-relay/config.json` (mode `0600`). The local copy makes a restart independent of service load order: if the credential service mounts after the plugin, the relay retries the lookup and starts the bot without asking for the token again. Neither copy belongs in `cordis.patch.yml`. Chat id, owner, whitelist, language and the update cursor live in the same `config.json`.
 
 ## Whitelist
 
@@ -120,7 +120,7 @@ Override fields in the profile's `cordis.patch.yml` — edit the existing row, d
 | `summaryMaxChars` | `1500` | Maximum final text in the summary. |
 | `minTurnMs` | `0` | Skip summaries for turns shorter than this. |
 | `apiBase` | `https://api.telegram.org` | Alternative Bot API endpoint (reverse proxy). |
-| `tokenEnv` | `TELEGRAM_RELAY_BOT_TOKEN` | Credential reference used for the token. |
+| `tokenEnv` | `TELEGRAM_RELAY_BOT_TOKEN` | Credential reference; a local copy is also kept in `config.json`. |
 
 ## Bot commands
 

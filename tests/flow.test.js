@@ -375,6 +375,49 @@ test('bot messages follow the configured language', async () => {
   }
 });
 
+test('token is retried from late credentials and survives a restart locally', async () => {
+  patchBot();
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-relay-token-'));
+  process.env.DSH_HOME = home;
+  try {
+    const services = {};
+    const ctx = {
+      ...fakeContext(),
+      get(name) {
+        return services[name];
+      },
+    };
+    const relay = new Relay(ctx, { port: 0 });
+    await relay.start();
+    assert.equal(relay.state().configured, false);
+
+    services.credentials = {
+      resolve: async () => ({ value: '111:first' }),
+      set: async () => {},
+    };
+    relay.attachCredentials();
+    await sleep(50);
+    assert.equal(relay.state().configured, true);
+    assert.equal(relay.state().tokenSource, 'credentials');
+    assert.equal(relay.state().running, true);
+
+    await relay.saveConfig({ token: '222:second' });
+    const stored = JSON.parse(
+      fs.readFileSync(path.join(home, 'storages', 'telegram-relay', 'config.json'), 'utf8'),
+    );
+    assert.equal(stored.token, '222:second');
+    await relay.dispose();
+
+    const restart = new Relay({ ...fakeContext(), get: () => undefined }, { port: 0 });
+    await restart.start();
+    assert.equal(restart.state().configured, true);
+    assert.equal(restart.state().tokenSource, 'file');
+    await restart.dispose();
+  } finally {
+    await restore();
+  }
+});
+
 test('a local answer wins and closes the Telegram copy', async () => {
   patchBot();
   const { ctx, relay } = await startRelay();
