@@ -4,7 +4,8 @@ A Telegram bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek
 
 - **agent questions** (`ask_user_question`) with inline buttons, waiting for an answer;
 - **tool approval requests** with Allow / Deny buttons;
-- **a turn summary** after every finished turn: status, duration, tool count and the final text.
+- **a turn summary** after every finished turn: status, duration, tool count and the final text;
+- **subagent messages** — completion summaries, questions and approvals, all on by default and switchable in the panel.
 
 Answers can be given in Telegram **or** in the DSH Web UI — the first complete answer wins, and the other copy is marked as already resolved. The plugin is host-only: it has no client UI and does not touch the model prompt.
 
@@ -74,6 +75,8 @@ If port `7810` is busy, an OS-assigned port is used; the actual URL is stored as
 
 The token is written to the DSH credential store (`TELEGRAM_RELAY_BOT_TOKEN`) when that service is available, and a local copy is always kept in `$DSH_HOME/storages/telegram-relay/config.json` (mode `0600`). The local copy makes a restart independent of service load order: if the credential service mounts after the plugin, the relay retries the lookup and starts the bot without asking for the token again. Neither copy belongs in `cordis.patch.yml`. Chat id, owner, whitelist, language and the update cursor live in the same `config.json`.
 
+Below the whitelist, **Subagent messages** is a master switch for subagent-originated notifications. When it is on, **Completion messages** and **Questions** appear underneath; all three default to on. **Questions** also covers subagent approval prompts.
+
 ## Whitelist
 
 The panel's **Whitelist** field accepts `@username`, `t.me/username`, `https://t.me/username`, `tg://user?id=…` or a numeric id — separated by commas, spaces or newlines.
@@ -100,7 +103,7 @@ The plugin subscribes to three seams:
 | `approval/request` (waterfall, prepended) | Sends Allow / Deny buttons, while passing the request to the Web UI. |
 | `session/event` (`turn/end`) | Builds the summary for the finished turn. |
 
-Sub-agents (`session.header.origin === 'subagent'`) are ignored.
+Sub-agent sessions (`session.header.origin === 'subagent'`) are forwarded by default. The panel's **Subagent messages** switch is the master control; once it is on, **Completion messages** and **Questions** choose what is sent. The Questions checkbox also covers subagent approval prompts, because an approval is an interactive subagent question. All three default to **on**. Turning the master switch off keeps the two nested choices for later; it does not erase them.
 
 Telegram transport is **long polling** (`getUpdates`), so no public IP, webhook or TLS certificate is needed. The loopback HTTP server only serves the control panel and is protected by a per-process CSRF token.
 
@@ -118,6 +121,9 @@ Override fields in the profile's `cordis.patch.yml` — edit the existing row, d
     notifyTurnEnd: true
     notifyQuestions: true
     notifyApprovals: true
+    notifySubagents: true
+    notifySubagentTurnEnd: true
+    notifySubagentQuestions: true
     summaryMaxChars: 1500
     minTurnMs: 0
 ```
@@ -129,6 +135,9 @@ Override fields in the profile's `cordis.patch.yml` — edit the existing row, d
 | `notifyTurnEnd` | `true` | Send a summary after each turn. |
 | `notifyQuestions` | `true` | Forward `ask_user_question`. |
 | `notifyApprovals` | `true` | Forward approval requests. |
+| `notifySubagents` | `true` | Master switch for subagent-originated messages. |
+| `notifySubagentTurnEnd` | `true` | Forward subagent completion summaries. |
+| `notifySubagentQuestions` | `true` | Forward subagent questions and approvals. |
 | `summaryMaxChars` | `1500` | Maximum final text in the summary. |
 | `minTurnMs` | `0` | Skip summaries for turns shorter than this. |
 | `apiBase` | `https://api.telegram.org` | Alternative Bot API endpoint (reverse proxy). |

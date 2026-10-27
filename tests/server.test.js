@@ -41,12 +41,18 @@ test('relay starts the control panel and serves state', async () => {
     assert.equal(payload.ok, true);
     assert.equal(payload.state.configured, false);
     assert.deepEqual(payload.state.pending, { questions: 0, approvals: 0 });
+    assert.equal(payload.state.notifySubagents, true);
+    assert.equal(payload.state.notifySubagentTurnEnd, true);
+    assert.equal(payload.state.notifySubagentQuestions, true);
 
     const page = await fetch(`${state.url}/`);
     assert.equal(page.status, 200);
     const markup = await page.text();
     assert.match(markup, /DSH · Telegram Relay/);
     assert.match(markup, /id="allowed"/);
+    assert.match(markup, /id="subagents"/);
+    assert.match(markup, /id="subagentTurnEnd"/);
+    assert.match(markup, /id="subagentQuestions"/);
     assert.match(markup, /id="reset"/);
     assert.match(markup, /id="lang"/);
     assert.match(markup, /<option value="ru">Русский<\/option>/);
@@ -71,6 +77,21 @@ test('relay starts the control panel and serves state', async () => {
     assert.equal(saved.status, 200);
     const savedState = (await saved.json()).state;
     assert.deepEqual(savedState.allowedUsers, ['@alice', '@bob']);
+
+    const subagents = await fetch(`${state.url}/api/config`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-relay-csrf': csrf },
+      body: JSON.stringify({
+        notifySubagents: false,
+        notifySubagentTurnEnd: false,
+        notifySubagentQuestions: true,
+      }),
+    });
+    assert.equal(subagents.status, 200);
+    const subagentState = (await subagents.json()).state;
+    assert.equal(subagentState.notifySubagents, false);
+    assert.equal(subagentState.notifySubagentTurnEnd, false);
+    assert.equal(subagentState.notifySubagentQuestions, true);
 
     const english = await fetch(`${state.url}/api/config`, {
       method: 'POST',

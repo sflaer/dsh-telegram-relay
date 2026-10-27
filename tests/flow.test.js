@@ -98,6 +98,26 @@ function buttonFor(message, index = 0) {
   return message.keyboard.inline_keyboard.flat()[index].callback_data;
 }
 
+function subagentSession(id = 'subagent-1') {
+  return { id, header: { cwd: '/work/sub', origin: 'subagent' } };
+}
+
+function emitSubagentTurn(ctx, session, { prompt = 'Subagent task?', text = 'Subagent result' } = {}) {
+  const emit = (event) => ctx.listeners.get('session/event')(session, event);
+  emit({
+    type: 'user/message',
+    data: { source: { kind: 'user' }, content: [{ type: 'text', text: prompt }] },
+    time: 1000,
+  });
+  emit({ type: 'turn/start', data: { turn: 1 }, time: 1100 });
+  emit({
+    type: 'assistant/message',
+    data: { message: { content: [{ type: 'text', text }] } },
+    time: 1500,
+  });
+  emit({ type: 'turn/end', data: { turn: 1, reason: { kind: 'completed' } }, time: 2200 });
+}
+
 test('question is delivered, answered by a button, and resolved', async () => {
   patchBot();
   const { ctx, relay } = await startRelay();
@@ -440,5 +460,136 @@ test('a local answer wins and closes the Telegram copy', async () => {
   } finally {
     await relay.dispose();
     restore();
+  }
+});
+
+test('subagent summaries and questions are enabled by default', async () => {
+  patchBot();
+  const { ctx, relay } = await startRelay();
+  try {
+    const state = relay.state();
+    assert.equal(state.notifySubagents, true);
+    assert.equal(state.notifySubagentTurnEnd, true);
+    assert.equal(state.notifySubagentQuestions, true);
+
+    emitSubagentTurn(ctx, subagentSession(), { text: 'Default subagent result' });
+    await sleep(40);
+    assert.ok(
+      sent.some((message) => message.text.includes('Default subagent result')),
+      'subagent completion is forwarded by default',
+    );
+
+    const controller = new AbortController();
+    const session = subagentSession('subagent-question');
+    const local = { answers: [{ id: 'sub-q1', selected: ['A'] }] };
+    const answer = await ctx.listeners.get('user-questions/request')(
+      {
+        questions: [{ id: 'sub-q1', question: 'Default subagent question?', options: [{ label: 'A' }] }],
+        signal: controller.signal,
+        agent: { session },
+      },
+      () => Promise.resolve(local),
+    );
+    assert.deepEqual(answer, local);
+    await sleep(40);
+    assert.ok(
+      sent.some((message) => message.text.includes('Default subagent question?')),
+      'subagent question is forwarded by default',
+    );
+  } finally {
+    await relay.dispose();
+    restore();
+  }
+});
+
+test('subagent settings can be toggled independently', async () => {
+  patchBot();
+  const { ctx, relay } = await startRelay();
+  try {
+    await relay.saveConfig({ notifySubagentTurnEnd: false });
+    emitSubagentTurn(ctx, subagentSession('sub-no-summary'), { text: 'Hidden subagent result' });
+    await sleep(40);
+    assert.ok(
+      !sent.some((message) => message.text.includes('Hidden subagent result')),
+      'completion toggle suppresses subagent summaries',
+    );
+
+    const local = { answers: [{ id: 'sub-q2', selected: ['B'] }] };
+    const answer = await ctx.listeners.get('user-questions/request')(
+      {
+        questions: [{ id: 'sub-q2', question: 'Visible subagent question?', options: [{ label: 'B' }] }],
+        agent: { session: subagentSession('sub-question') },
+      },
+      () => Promise.resolve(local),
+    );
+    assert.deepEqual(answer, local);
+    await sleep(40);
+    assert.ok(
+      sent.some((message) => message.text.includes('Visible subagent question?')),
+      'questions stay enabled while summaries are off',
+    );
+
+    await relay.saveConfig({ notifySubagentTurnEnd: true, notifySubagentQuestions: false });
+    emitSubagentTurn(ctx, subagentSession('sub-visible-summary'), { text: 'Visible subagent result' });
+    await sleep(40);
+    assert.ok(
+      sent.some((message) => message.text.includes('Visible subagent result')),
+      'completion toggle alone still allows summaries',
+    );
+
+    const nextAnswer = { answers: [{ id: 'sub-q3', selected: ['C'] }] };
+    const suppressed = await ctx.listeners.get('user-questions/request')(
+      {
+        questions: [{ id: 'sub-q3', question: 'Suppressed subagent question?', options: [{ label: 'C' }] }],
+        agent: { session: subagentSession('sub-suppressed') },
+      },
+      () => Promise.resolve(nextAnswer),
+    );
+    assert.deepEqual(suppressed, nextAnswer);
+    await sleep(40);
+    assert.ok(
+      !sent.some((message) => message.text.includes('Suppressed subagent question?')),
+      'question toggle suppresses subagent questions',
+    );
+
+    await relay.saveConfig({ notifySubagents: false, notifySubagentQuestions: true });
+    emitSubagentTurn(ctx, subagentSession('sub-master-off'), { text: 'Master off result' });
+    await sleep(40);
+    assert.ok(
+      !sent.some((message) => message.text.includes('Master off result')),
+      'master toggle suppresses subagent summaries',
+    );
+  } finally {
+    await relay.dispose();
+    restore();
+  }
+});
+
+test('subagent settings survive a restart', async () => {
+  patchBot();
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dsh-relay-subagents-'));
+  process.env.DSH_HOME = home;
+  try {
+    const first = new Relay(fakeContext(), { port: 0, language: 'ru' });
+    await first.start();
+    await first.saveConfig({
+      token: '123456:test',
+      chatId: '42',
+      notifySubagents: false,
+      notifySubagentTurnEnd: false,
+      notifySubagentQuestions: true,
+    });
+    assert.equal(first.state().notifySubagents, false);
+    await first.dispose();
+
+    const second = new Relay(fakeContext(), { port: 0, language: 'ru' });
+    await second.start();
+    const state = second.state();
+    assert.equal(state.notifySubagents, false);
+    assert.equal(state.notifySubagentTurnEnd, false);
+    assert.equal(state.notifySubagentQuestions, true);
+    await second.dispose();
+  } finally {
+    await restore();
   }
 });

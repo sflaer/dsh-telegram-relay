@@ -3,7 +3,7 @@
   "displayName": "Telegram Relay",
   "version": "0.1.0",
   "private": true,
-  "description": "Telegram relay for DeepSeek Harness: forwards questions and approvals to a bot and sends a turn summary when the agent finishes.",
+  "description": "Telegram relay for DeepSeek Harness: forwards questions, approvals, turn summaries and subagent messages to a bot, with a loopback control panel.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

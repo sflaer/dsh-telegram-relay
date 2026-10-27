@@ -65,8 +65,8 @@ load order.
 Approvals use the same race: **Allow** returns `allowed-once`, **Deny** returns
 `rejected`, and the native approval prompt can still decide first.
 
-After the last step of a root-session turn, the relay closes the turn from `turn/end` and
-renders one summary message:
+After the last step of a turn — root or subagent, when subagent completion messages are
+enabled — the relay closes the turn from `turn/end` and renders one summary message:
 
 ```text
 ✅ DSH finished the turn
@@ -76,7 +76,8 @@ final text …
 ```
 
 The folder/time/tools line always goes last. Markdown is converted to Telegram HTML;
-fenced code, links, quotes and spoilers are supported. Sub-agent sessions are ignored.
+fenced code, links, quotes and spoilers are supported. Sub-agent sessions are forwarded
+too, and can be switched off independently — see [Sub-agent messages](#sub-agent-messages).
 
 ## Startup and token resolution
 
@@ -105,6 +106,24 @@ Binding is separate from the token:
   whitelist still gates who can answer.
 - **Unbind chat** clears the chat id and the owner; the whitelist is kept.
 
+## Sub-agent messages
+
+Subagent sessions are forwarded by default. The panel has a **Subagent messages** master
+switch; when it is on, two checkboxes appear underneath:
+
+| Checkbox | Config key | Default | Covers |
+|---|---|---|---|
+| **Completion messages** | `notifySubagentTurnEnd` | `true` | Turn summaries from subagent sessions. |
+| **Questions** | `notifySubagentQuestions` | `true` | Subagent questions and approval prompts. |
+| Master switch | `notifySubagents` | `true` | Both of the above. |
+
+Turning the master switch off suppresses both kinds without clearing the checkboxes; the
+previous choices come back when it is switched on again. The general `notifyTurnEnd`,
+`notifyQuestions` and `notifyApprovals` settings still apply to every session, so the
+subagent switches are an additional layer rather than a replacement. Root-session
+behaviour is unchanged. All three choices are saved in `config.json` and survive a
+restart.
+
 ## Screenshots
 
 ### Control panel
@@ -115,7 +134,8 @@ The real panel, with the language set to English. The token field is intentional
 a stored token is loaded from the credential store and is never echoed back into the
 page. The header shows the running build marker — the quickest way to confirm which code
 the host actually loaded. The panel is opened manually at `http://127.0.0.1:7810` (or the
-fallback port stored as `panelUrl`).
+fallback port stored as `panelUrl`). The **Subagent messages** switch sits below the
+whitelist, with the two nested checkboxes visible because it is on.
 
 ### Telegram chat
 

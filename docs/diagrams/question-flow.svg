@@ -104,5 +104,5 @@
   <line x1="820" y1="780" x2="1050" y2="780" stroke="#229ed9" stroke-width="1.7" marker-end="url(#art)"/>
   <text class="lbl" x="935" y="770" text-anchor="middle">status · title · body · folder/time/tools</text>
 
-  <text class="s" x="40" y="844">Sub-agent sessions are ignored; a summary is sent only after a root-session turn ends.</text>
+  <text class="s" x="40" y="844">Sub-agent turns and questions are forwarded too; the panel can switch them off independently.</text>
 </svg>
