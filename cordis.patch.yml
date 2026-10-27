@@ -1,0 +1,7 @@
+# Telegram relay bundle: inserts the host plugin row into the profile tree.
+# Personal settings (token, chat id) live in the local control panel, not here.
+- insert:
+    - id: telegram-relay
+      name: dsh-telegram-relay
+      config:
+        port: 7810

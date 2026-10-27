@@ -1,0 +1,37 @@
+{
+  "name": "dsh-telegram-relay",
+  "displayName": "Telegram Relay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Telegram relay for DeepSeek Harness: forwards questions and approvals to a bot and sends a turn summary when the agent finishes.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "telegram"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/",
+    "check": "node --check lib/index.js && node --check lib/relay.js && node --check lib/telegram.js && node --check lib/server.js"
+  },
+  "license": "MIT"
+}
