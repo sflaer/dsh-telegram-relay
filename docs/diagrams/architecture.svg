@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="800" viewBox="0 0 1240 800" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">dsh-telegram-relay architecture</title>
+  <desc id="dsc">The DSH host runs the agent and the relay plugin. The relay forwards questions, approvals and turn summaries to Telegram over the Bot API, and keeps its state on disk.</desc>
+  <defs>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f9d58"/>
+    </marker>
+  </defs>
+  <style>
+    .title { font: 700 25px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .sub { font: 400 13.5px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .h { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .t { font: 400 12.5px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    .s { font: 400 11.5px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .m { font: 600 11.5px 'Cascadia Code', Consolas, monospace; fill: #1e293b; }
+    .lbl { font: 500 11px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+  </style>
+
+  <rect width="1240" height="800" fill="#f6f8fc"/>
+  <text class="title" x="40" y="46">How the relay is wired</text>
+  <text class="sub" x="40" y="70">One host-only plugin, one loopback panel, one long-poll connection to Telegram.</text>
+
+  <!-- DSH host -->
+  <rect x="28" y="96" width="690" height="664" rx="18" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text class="h" x="52" y="126" fill="#2563eb">DSH host process</text>
+  <text class="s" x="52" y="146">Electron · Node · cordis plugin runtime</text>
+
+  <!-- Agent -->
+  <rect x="60" y="160" width="250" height="100" rx="12" fill="#ffffff" stroke="#dbe3ef" filter="url(#sh)"/>
+  <text class="h" x="78" y="188">Agent session</text>
+  <text class="t" x="78" y="212">prompt · tools · final answer</text>
+  <text class="s" x="78" y="234">one turn can contain many steps</text>
+
+  <!-- Seams -->
+  <rect x="60" y="300" width="250" height="200" rx="12" fill="#ffffff" stroke="#dbe3ef" filter="url(#sh)"/>
+  <text class="h" x="78" y="328">Plugin seams</text>
+  <rect x="76" y="342" width="218" height="32" rx="7" fill="#f1f5f9"/>
+  <text class="m" x="88" y="363">session/event</text>
+  <rect x="76" y="382" width="218" height="32" rx="7" fill="#eef2ff"/>
+  <text class="m" x="88" y="403" font-size="10.5">user-questions/request</text>
+  <rect x="76" y="422" width="218" height="32" rx="7" fill="#eef2ff"/>
+  <text class="m" x="88" y="443" font-size="10.5">approval/request</text>
+  <text class="s" x="78" y="480">waterfalls for asks, events for turns</text>
+
+  <!-- Relay -->
+  <rect x="390" y="160" width="290" height="470" rx="14" fill="#ffffff" stroke="#0f9d58" stroke-width="1.6" filter="url(#sh)"/>
+  <text class="h" x="410" y="188">dsh-telegram-relay</text>
+  <text class="s" x="410" y="208">host-only plugin · no client UI</text>
+
+  <rect x="406" y="224" width="258" height="62" rx="9" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <text class="m" x="420" y="246">Relay core</text>
+  <text class="s" x="420" y="266">queue · pending map · first answer wins</text>
+
+  <rect x="406" y="298" width="258" height="62" rx="9" fill="#fffbeb" stroke="#fde68a"/>
+  <text class="m" x="420" y="320">Control panel</text>
+  <text class="s" x="420" y="340">127.0.0.1:7810 · CSRF protected</text>
+
+  <rect x="406" y="372" width="258" height="62" rx="9" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="m" x="420" y="394">Long-poll worker</text>
+  <text class="s" x="420" y="414">getUpdates · 1.1 s pacing · 429 retry</text>
+
+  <rect x="406" y="446" width="258" height="62" rx="9" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="m" x="420" y="468">Token adapter</text>
+  <text class="s" x="420" y="488" font-size="11">credentials → config.json → env</text>
+
+  <rect x="406" y="520" width="258" height="62" rx="9" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="m" x="420" y="542">Turn tracker</text>
+  <text class="s" x="420" y="562">turn/end · duration · tool count</text>
+
+  <!-- State -->
+  <rect x="60" y="640" width="620" height="80" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+  <text class="h" x="78" y="668">Persistent state</text>
+  <text class="m" x="78" y="690" font-size="11">$DSH_HOME/storages/telegram-relay/config.json</text>
+  <text class="s" x="78" y="710">token copy · chat id · owner · whitelist · language · update offset · read/write</text>
+
+  <!-- Arrows inside host -->
+  <line x1="185" y1="260" x2="185" y2="300" stroke="#64748b" stroke-width="1.5" marker-end="url(#ar)" marker-start="url(#ar)"/>
+  <text class="lbl" x="195" y="285">events &amp; asks</text>
+
+  <line x1="310" y1="400" x2="390" y2="400" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arb)"/>
+  <text class="lbl" x="350" y="392" text-anchor="middle" font-size="10">events</text>
+
+  <!-- Telegram -->
+  <rect x="790" y="170" width="250" height="110" rx="12" fill="#e0f2fe" stroke="#7dd3fc" filter="url(#sh)"/>
+  <text class="h" x="808" y="198">Telegram Bot API</text>
+  <text class="s" x="808" y="222">api.telegram.org · HTTPS</text>
+  <text class="s" x="808" y="242">long polling, no public IP</text>
+  <text class="s" x="808" y="262">4096-char message limit</text>
+
+  <rect x="790" y="420" width="280" height="240" rx="14" fill="#ffffff" stroke="#dbe3ef" filter="url(#sh)"/>
+  <text class="h" x="810" y="450">Your Telegram chat</text>
+  <text class="s" x="810" y="472">the bound private chat or group</text>
+  <circle cx="818" cy="500" r="3" fill="#229ed9"/>
+  <text class="t" x="830" y="504">question + inline buttons</text>
+  <circle cx="818" cy="528" r="3" fill="#229ed9"/>
+  <text class="t" x="830" y="532">approval: Allow / Deny</text>
+  <circle cx="818" cy="556" r="3" fill="#229ed9"/>
+  <text class="t" x="830" y="560">turn summary: status, text, meta</text>
+  <circle cx="818" cy="584" r="3" fill="#229ed9"/>
+  <text class="t" x="830" y="588">/start, /status, /help</text>
+  <text class="s" x="810" y="620">answers can also be given in the DSH Web UI</text>
+  <rect x="810" y="632" width="168" height="20" rx="10" fill="#f1f5f9"/>
+  <text class="s" x="822" y="646" font-size="10.5">first complete answer wins</text>
+
+  <!-- Telegram arrows -->
+  <line x1="680" y1="240" x2="790" y2="222" stroke="#0f9d58" stroke-width="1.6" marker-end="url(#arg)"/>
+  <text class="lbl" x="735" y="214" text-anchor="middle" font-size="10">sendMessage</text>
+
+  <line x1="790" y1="266" x2="680" y2="284" stroke="#0f9d58" stroke-width="1.6" marker-end="url(#arg)"/>
+  <text class="lbl" x="735" y="300" text-anchor="middle" font-size="10">getUpdates</text>
+
+  <line x1="915" y1="282" x2="915" y2="420" stroke="#229ed9" stroke-width="1.6" marker-end="url(#ar)" marker-start="url(#ar)"/>
+  <text class="lbl" x="925" y="355" font-size="10">push · tap</text>
+
+  <text class="s" x="40" y="784">The panel is opened manually in a local browser; the bot token never leaves the host except in Bot API requests.</text>
+</svg>

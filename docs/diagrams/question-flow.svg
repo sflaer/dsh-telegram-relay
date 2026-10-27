@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="860" viewBox="0 0 1240 860" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Question and approval sequence</title>
+  <desc id="dsc">A question is sent to Telegram while the native DSH question stays open. The first complete answer wins.</desc>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f9d58"/>
+    </marker>
+    <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#229ed9"/>
+    </marker>
+  </defs>
+  <style>
+    .title { font: 700 25px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .sub { font: 400 13.5px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .p { font: 700 13px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .lbl { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    .lblb { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #1d4ed8; }
+    .lblg { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #047857; }
+    .t { font: 400 13px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    .s { font: 400 12px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .h { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+  </style>
+
+  <rect width="1240" height="860" fill="#ffffff"/>
+  <text class="title" x="40" y="44">A question, end to end</text>
+  <text class="sub" x="40" y="69">The Telegram copy and the native DSH prompt are answered by the same waterfall promise.</text>
+
+  <!-- participants -->
+  <rect x="62" y="100" width="176" height="52" rx="10" fill="#fffbeb" stroke="#fcd34d"/>
+  <text class="p" x="150" y="132" text-anchor="middle">DSH Web UI</text>
+
+  <rect x="290" y="100" width="140" height="52" rx="10" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="p" x="360" y="132" text-anchor="middle">Agent</text>
+
+  <rect x="510" y="100" width="160" height="52" rx="10" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text class="p" x="590" y="132" text-anchor="middle">Relay</text>
+
+  <rect x="744" y="100" width="152" height="52" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text class="p" x="820" y="132" text-anchor="middle">Bot API</text>
+
+  <rect x="956" y="100" width="188" height="52" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text class="p" x="1050" y="132" text-anchor="middle">Telegram user</text>
+
+  <!-- lifelines -->
+  <line x1="150" y1="152" x2="150" y2="820" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+  <line x1="360" y1="152" x2="360" y2="820" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+  <line x1="590" y1="152" x2="590" y2="820" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+  <line x1="820" y1="152" x2="820" y2="820" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+  <line x1="1050" y1="152" x2="1050" y2="820" stroke="#cbd5e1" stroke-dasharray="5 5"/>
+
+  <!-- 1 -->
+  <line x1="360" y1="196" x2="590" y2="196" stroke="#0f9d58" stroke-width="1.7" marker-end="url(#arg)"/>
+  <text class="lblg" x="475" y="186" text-anchor="middle">user-questions/request</text>
+  <text class="s" x="475" y="211" text-anchor="middle">waterfall · questions[] · signal</text>
+
+  <!-- 2 -->
+  <line x1="590" y1="241" x2="150" y2="241" stroke="#2563eb" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#arb)"/>
+  <text class="lblb" x="370" y="231" text-anchor="middle">next() keeps the native prompt open</text>
+
+  <!-- 3 -->
+  <line x1="590" y1="286" x2="820" y2="286" stroke="#0f9d58" stroke-width="1.7" marker-end="url(#arg)"/>
+  <text class="lblg" x="705" y="276" text-anchor="middle">sendMessage + inline keyboard</text>
+
+  <!-- 4 -->
+  <line x1="820" y1="331" x2="1050" y2="331" stroke="#229ed9" stroke-width="1.7" marker-end="url(#art)"/>
+  <text class="lbl" x="935" y="321" text-anchor="middle">push notification</text>
+
+  <!-- 5 -->
+  <line x1="1050" y1="376" x2="820" y2="376" stroke="#229ed9" stroke-width="1.7" marker-end="url(#art)"/>
+  <text class="lbl" x="935" y="366" text-anchor="middle">button tap or text reply</text>
+
+  <!-- 6 -->
+  <line x1="820" y1="421" x2="590" y2="421" stroke="#229ed9" stroke-width="1.7" marker-end="url(#art)"/>
+  <text class="lbl" x="705" y="411" text-anchor="middle">callback_query / message</text>
+
+  <!-- 7 -->
+  <line x1="150" y1="471" x2="590" y2="471" stroke="#2563eb" stroke-width="1.7" stroke-dasharray="6 4" marker-end="url(#arb)"/>
+  <text class="lblb" x="370" y="461" text-anchor="middle">answer arrives through the next() promise</text>
+
+  <!-- 8 -->
+  <line x1="590" y1="516" x2="360" y2="516" stroke="#0f9d58" stroke-width="1.7" marker-end="url(#arg)"/>
+  <text class="lblg" x="475" y="506" text-anchor="middle">the waterfall resolves</text>
+
+  <!-- rule -->
+  <rect x="40" y="552" width="1160" height="104" rx="12" fill="#fffbeb" stroke="#fcd34d"/>
+  <text class="h" x="62" y="580">First complete answer wins</text>
+  <text class="t" x="62" y="605">Telegram and the DSH Web UI race for the same question. The first complete answer resolves the waterfall;</text>
+  <text class="t" x="62" y="625">the other copy is edited to “answered in DSH” or “answered in Telegram” and its buttons stop being active.</text>
+  <text class="t" x="62" y="645">Approvals follow exactly the same race with Allow / Deny.</text>
+
+  <!-- turn summary -->
+  <line x1="360" y1="700" x2="590" y2="700" stroke="#64748b" stroke-width="1.7" marker-end="url(#ar)"/>
+  <text class="lbl" x="475" y="690" text-anchor="middle">turn/end · reason · tools · final text</text>
+
+  <line x1="590" y1="740" x2="820" y2="740" stroke="#0f9d58" stroke-width="1.7" marker-end="url(#arg)"/>
+  <text class="lblg" x="705" y="730" text-anchor="middle">one summary message</text>
+
+  <line x1="820" y1="780" x2="1050" y2="780" stroke="#229ed9" stroke-width="1.7" marker-end="url(#art)"/>
+  <text class="lbl" x="935" y="770" text-anchor="middle">status · title · body · folder/time/tools</text>
+
+  <text class="s" x="40" y="844">Sub-agent sessions are ignored; a summary is sent only after a root-session turn ends.</text>
+</svg>

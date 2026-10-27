@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="760" viewBox="0 0 1240 760" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Startup and token resolution</title>
+  <desc id="dsc">The plugin starts the panel first, resolves the bot token from credentials, config.json or the environment, and retries when the credential service appears.</desc>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f9d58"/>
+    </marker>
+    <marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+  <style>
+    .title { font: 700 25px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .sub { font: 400 13.5px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .h { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .t { font: 400 12.5px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    .s { font: 400 11.5px 'Segoe UI', Arial, sans-serif; fill: #64748b; }
+    .m { font: 600 10.5px 'Cascadia Code', Consolas, monospace; fill: #1e293b; }
+    .lbl { font: 600 11px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+  </style>
+
+  <rect width="1240" height="760" fill="#ffffff"/>
+  <text class="title" x="40" y="44">Startup: where the token comes from</text>
+  <text class="sub" x="40" y="69">The panel starts first, so the bot can be configured without restarting DSH again.</text>
+
+  <!-- A -->
+  <rect x="40" y="130" width="170" height="80" rx="11" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="56" y="160">Plugin loaded</text>
+  <text class="s" x="56" y="182">DSH host start</text>
+
+  <!-- B -->
+  <rect x="250" y="130" width="170" height="80" rx="11" fill="#fffbeb" stroke="#fcd34d"/>
+  <text class="h" x="266" y="160">Panel up</text>
+  <text class="s" x="266" y="182">127.0.0.1:7810</text>
+
+  <!-- C -->
+  <rect x="460" y="120" width="260" height="120" rx="12" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text class="h" x="476" y="146">Resolve the bot token</text>
+  <text class="m" x="476" y="172">1. credentials.resolve(ref)</text>
+  <text class="m" x="476" y="194">2. config.json → token</text>
+  <text class="m" x="476" y="216">3. process.env[tokenEnv]</text>
+
+  <!-- D -->
+  <polygon points="800,170 860,215 800,260 740,215" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text class="h" x="800" y="220" text-anchor="middle">token?</text>
+
+  <!-- E -->
+  <rect x="900" y="130" width="220" height="80" rx="11" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text class="h" x="916" y="160">Start long-poll worker</text>
+  <text class="s" x="916" y="182">getUpdates · bot online</text>
+
+  <!-- F -->
+  <rect x="900" y="270" width="220" height="80" rx="11" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text class="h" x="916" y="300">Bot online</text>
+  <text class="s" x="916" y="322">questions · approvals · summaries</text>
+
+  <!-- G -->
+  <rect x="710" y="370" width="250" height="80" rx="11" fill="#ffffff" stroke="#cbd5e1"/>
+  <text class="h" x="726" y="400">Panel only — waiting</text>
+  <text class="s" x="726" y="422">token field is empty</text>
+
+  <!-- H -->
+  <rect x="1000" y="370" width="210" height="80" rx="11" fill="#ffffff" stroke="#cbd5e1"/>
+  <text class="h" x="1016" y="400">Save / service mount</text>
+  <text class="s" x="1016" y="422">retry the lookup</text>
+
+  <!-- arrows -->
+  <line x1="210" y1="170" x2="250" y2="170" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="420" y1="170" x2="460" y2="170" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+  <line x1="720" y1="215" x2="740" y2="215" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+
+  <line x1="846" y1="196" x2="900" y2="172" stroke="#0f9d58" stroke-width="1.7" marker-end="url(#arg)"/>
+  <text class="lbl" x="860" y="174" fill="#047857">yes</text>
+
+  <line x1="800" y1="260" x2="800" y2="370" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+  <text class="lbl" x="810" y="318">no</text>
+
+  <line x1="1010" y1="210" x2="1010" y2="270" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+
+  <line x1="960" y1="410" x2="1000" y2="410" stroke="#64748b" stroke-width="1.6" marker-end="url(#ar)"/>
+
+  <!-- retry path -->
+  <polyline points="1110,450 1110,500 600,500 600,240" fill="none" stroke="#2563eb" stroke-width="1.7" stroke-dasharray="7 5" marker-end="url(#arb)"/>
+  <text class="lbl" x="800" y="518" text-anchor="middle" fill="#1d4ed8">retry when the credential service appears</text>
+
+  <!-- cards -->
+  <rect x="40" y="560" width="620" height="160" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="60" y="590">Why a local copy?</text>
+  <text class="t" x="60" y="616">The credential service can mount after the plugin. The relay keeps its own copy in config.json:</text>
+  <text class="t" x="60" y="640">• a restart works even if credentials.resolve() is not ready yet;</text>
+  <text class="t" x="60" y="660">• saving the token in the panel writes both stores;</text>
+  <text class="t" x="60" y="680">• process.env[tokenEnv] is the last fallback.</text>
+
+  <rect x="700" y="560" width="510" height="160" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text class="h" x="720" y="590">Chat binding &amp; access</text>
+  <text class="t" x="720" y="616">• /start in a private chat binds the chat;</text>
+  <text class="t" x="720" y="638">• empty whitelist: the first user becomes the owner;</text>
+  <text class="t" x="720" y="660">• non-empty: only listed users and the owner;</text>
+  <text class="t" x="720" y="682">• groups: everyone sees messages, the whitelist gates replies.</text>
+
+  <text class="s" x="40" y="746">Token, chat id, owner, whitelist, language and update offset all live in one config.json.</text>
+</svg>

@@ -8,6 +8,15 @@ A Telegram bridge for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek
 
 Answers can be given in Telegram **or** in the DSH Web UI — the first complete answer wins, and the other copy is marked as already resolved. The plugin is host-only: it has no client UI and does not touch the model prompt.
 
+## Screenshots
+
+| Control panel | Telegram |
+|---|---|
+| <img src="docs/screenshots/panel.png" alt="Control panel" width="420"> | <img src="docs/screenshots/telegram-chat.png" alt="A question with inline buttons and the turn summary" width="420"> |
+
+The [visual guide](docs/README.md) explains the architecture, the question/approval race
+and the startup flow, with diagrams.
+
 ## Languages
 
 The panel and every bot-facing message are available in **Russian, English and Chinese**. The selector lives in the panel header; the choice is persisted in `config.json` and applies to new messages, the command menu, the panel and error messages. Already-sent messages are not rewritten.
@@ -79,6 +88,9 @@ The panel's **Whitelist** field accepts `@username`, `t.me/username`, `https://t
 To prevent someone else from binding the bot first, fill in the whitelist **before** sending `/start`.
 
 ## How it works
+
+See the [visual guide](docs/README.md) for the architecture diagram, the full sequence
+and the screenshots.
 
 The plugin subscribes to three seams:
 
