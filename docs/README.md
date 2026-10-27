@@ -65,8 +65,8 @@ load order.
 Approvals use the same race: **Allow** returns `allowed-once`, **Deny** returns
 `rejected`, and the native approval prompt can still decide first.
 
-After the last step of a root-session turn, `turn/end` carries the reason, duration, tool
-count and final assistant text. The relay renders one summary message:
+After the last step of a root-session turn, the relay closes the turn from `turn/end` and
+renders one summary message:
 
 ```text
 ✅ DSH finished the turn
@@ -92,7 +92,8 @@ therefore starts the panel first and resolves the token in this order:
 If no token is found, the panel still opens and shows an empty token field. When the
 credential service appears, `ctx.inject(['credentials'], …)` (registered after
 `start()`) triggers a retry; saving the token in the panel also starts the bot
-immediately and writes both stores. That means a restart never asks for the token twice.
+immediately and writes the local copy (and the credential store when available). That
+means a restart never asks for the token twice.
 
 Binding is separate from the token:
 
@@ -100,7 +101,8 @@ Binding is separate from the token:
   becomes the owner.
 - With a non-empty whitelist only listed users and the owner can bind, write and press
   buttons.
-- In a group every member sees the messages; the whitelist still gates who can answer.
+- In a group that you bound manually by its chat id, every member sees the messages; the
+  whitelist still gates who can answer.
 - **Unbind chat** clears the chat id and the owner; the whitelist is kept.
 
 ## Screenshots

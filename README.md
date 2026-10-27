@@ -81,7 +81,7 @@ The panel's **Whitelist** field accepts `@username`, `t.me/username`, `https://t
 - **Empty whitelist** — the owner is assigned automatically: the first user who sends `/start` in a private chat. Only the owner can write to the bot and press buttons.
 - **Non-empty whitelist** — only listed users can bind the chat, send messages and press buttons. Everyone else is rejected; their button presses are ignored.
 - The owner always has access, even when not listed.
-- If the bound chat is a **group**, every member sees notifications and replies. The whitelist only limits who can write and press buttons.
+- If you bind a **group** by its chat id in the panel, every member sees notifications and replies. The whitelist only limits who can write and press buttons.
 - Usernames can change. For a stable rule use `tg://user?id=…` or a numeric id.
 - **Unbind chat** clears the binding and the owner; the whitelist is kept.
 
