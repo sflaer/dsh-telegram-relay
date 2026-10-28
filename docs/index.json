@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "title": { "en": "Qemetth plugins", "ru": "Плагины Qemetth" },
+  "description": {
+    "en": "DeepSeek Harness plugins by Qemetth.",
+    "ru": "Плагины DeepSeek Harness от Qemetth."
+  },
+  "metadata": {
+    "categories": {
+      "notify": { "title": { "en": "Notifications", "ru": "Уведомления" } },
+      "tools": { "title": { "en": "Tools", "ru": "Инструменты" } }
+    },
+    "labels": {
+      "telegram": { "title": { "en": "Telegram" } },
+      "remote": { "title": { "en": "Remote control", "ru": "Удалённое управление" } },
+      "approvals": { "title": { "en": "Approvals", "ru": "Подтверждения" } }
+    }
+  },
+  "plugins": [
+    {
+      "name": "dsh-telegram-relay",
+      "title": { "en": "Telegram Relay", "ru": "Telegram-релей" },
+      "description": {
+        "en": "Forward questions, tool approvals, turn summaries and subagent messages to a Telegram bot, with a loopback control panel.",
+        "ru": "Пересылает вопросы, подтверждения инструментов, итоги хода и сообщения субагентов в Telegram-бота; панель управления на loopback."
+      },
+      "author": "Qemetth",
+      "homepage": "https://github.com/sflaer/dsh-telegram-relay",
+      "repository": {
+        "url": "https://github.com/sflaer/dsh-telegram-relay"
+      },
+      "metadata": {
+        "category": "notify",
+        "keywords": ["telegram", "notifications", "approvals", "remote-control"],
+        "labels": ["telegram", "remote", "approvals"]
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1793187829,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/sflaer/dsh-telegram-relay",
+            "commit": "75264bc713e458fc44c4647fa81614d4e9eaaac1"
+          },
+          "engines": { "dsh": ">=0.2.0" }
+        }
+      ]
+    }
+  ]
+}
