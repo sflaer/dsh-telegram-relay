@@ -16,8 +16,14 @@
     "cordis.patch.yml",
     "README.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sflaer/dsh-telegram-relay.git"
+  },
+  "homepage": "https://github.com/sflaer/dsh-telegram-relay#readme",
   "engines": {
-    "node": ">=22.19.0"
+    "node": ">=22.19.0",
+    "dsh": ">=0.2.0"
   },
   "keywords": [
     "dsh-plugin",
